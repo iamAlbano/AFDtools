@@ -10,3 +10,9 @@ view.o: tools/view/view.h
 
 clean:
 	rm -rf *.o tools/*/*.o afdtool
+
+run:
+	make clean
+	make
+	clear
+	./afdtool --dot afd.txt --output afd.dot
