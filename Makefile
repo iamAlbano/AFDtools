@@ -15,4 +15,4 @@ run:
 	make clean
 	make
 	clear
-	./afdtool --dot afd.txt --output afd.dot
+	./afdtool --dot afd2.txt --output afd.dot

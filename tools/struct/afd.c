@@ -4,16 +4,16 @@
 #include <ctype.h>
 #include "afd.h"
 
-state *createState(state *state, char *identifier)
+state *createState(state *next_state, char *identifier)
 {
-    struct state *state_aux = malloc(sizeof(state));
+    state *new_state = (state *)malloc(sizeof(state));
+    
+    strcpy(new_state->identifier, identifier);
+    new_state->is_final = 0;
+    new_state->is_final = 0;
+    new_state->next = next_state;
 
-    strcpy(state_aux->identifier, identifier);
-    state_aux->is_final = 0;
-    state_aux->is_final = 0;
-    state_aux->next = state;
-
-    return state_aux;
+    return new_state;
 }
 
 void setStates( afd_struct *afd, FILE *afd_file) {
@@ -21,7 +21,8 @@ void setStates( afd_struct *afd, FILE *afd_file) {
 
     fgets(file_line, 50, afd_file);
     file_line[strcspn(file_line, "\n")] = 0;
-    afd->states_size = atoi(file_line);
+    int size = atoi(file_line);
+    afd->states_size = size; 
 
     if (!afd->states_size ) {
         printf("Arquivo de formato inválido!\n"); 
@@ -30,12 +31,12 @@ void setStates( afd_struct *afd, FILE *afd_file) {
 
     state *state_aux = NULL;
 
-    for (int i = 0; i < afd->states_size; i++) {
+    for (int i = 0; i < size; i++) {
         fgets(file_line, 50, afd_file);
         file_line[strcspn(file_line, "\n")] = 0;
         state_aux = createState(state_aux, file_line);
     }
-    afd->states = *state_aux;
+    afd->states = state_aux;
 }
 
 void setAlphabet( afd_struct *afd, FILE *afd_file) {
@@ -57,16 +58,16 @@ void setAlphabet( afd_struct *afd, FILE *afd_file) {
     }
 }
 
-void *createTransition (transition *transition, char *symbol, state *origin, state *destiny) {
-    struct transition *transition_aux = malloc(sizeof(transition));
+void *createTransition (transition *next_transition, char *symbol, char *origin, char *destiny) {
+    transition *new_transition = (transition *)malloc(sizeof(transition));
+    
+    strcpy(new_transition->symbols[0], symbol);
+    new_transition->symbols_size = 1;
+    strcpy(new_transition->origin_id, origin);
+    strcpy(new_transition->destiny_id , destiny);
+    new_transition->next = next_transition;
 
-    strcpy(transition_aux->symbols[0], symbol);
-    transition_aux->symbols_size = 1;
-    transition_aux->origin = origin;
-    transition_aux->destiny = destiny;
-    transition_aux->next = transition;
-
-    return transition;
+    return new_transition;
 }
 
 void setTransitions( afd_struct *afd, FILE *afd_file) {
@@ -94,38 +95,7 @@ void setTransitions( afd_struct *afd, FILE *afd_file) {
 
         sscanf(file_line, "%s %s %s", origin_id, symbol, destiny_id);
 
-        afd_struct afd_origin = *afd;
-        afd_struct afd_destiny = *afd;
-
-        state *origin = NULL;
-        state *destiny = NULL;
-    
-        for (int i = 0; i < afd_origin.states_size; i++) {  
-            if (!origin && strncmp(afd_origin.states.identifier, origin_id, 50) == 0) {
-                origin = &afd_origin.states;
-                break;
-            }
-            
-            afd_origin.states = *afd_origin.states.next;
-        }
-
-        for (int j = 0; j < afd_destiny.states_size; j++) {  
-            if (!destiny && strncmp(afd_destiny.states.identifier, destiny_id, 50) == 0) {
-                destiny = &afd_destiny.states;
-                break;
-            }
-            
-            afd_destiny.states = *afd_destiny.states.next;
-        }
-
-        afd_struct afd_transitions = *afd;
-
-        for (int k = 0; k < afd_transitions.transitions_size; k++) {
-            puts(afd_transitions.transitions->origin->identifier);
-        }
-
-        transition_aux = createTransition(transition_aux, symbol, origin, destiny);
-        printf("------------------\n"); 
+        transition_aux = createTransition(transition_aux, symbol, origin_id, destiny_id); 
         transitions_size++;
 
     }
@@ -138,10 +108,10 @@ void printAFD (afd_struct afd) {
 
     printf("Estados: \n");
     for (int i = 0; i < afd_aux.states_size; i++) {
-        printf("%s\n", afd_aux.states.identifier);
+        printf("%s\n", afd_aux.states->identifier);
 
         if (i != afd_aux.states_size-1)
-            afd_aux.states = *afd_aux.states.next;
+            afd_aux.states = afd_aux.states->next;
     }
 
     printf("Alfabeto: \n");
@@ -153,9 +123,15 @@ void printAFD (afd_struct afd) {
 
     printf("Transições: \n"); 
 
-    /* for (int i = 0; i < afd.transitions_size; i++) {
-        puts(transition_afd.transitions->symbols_size);
-    } */
+    for(int i = 0; i < transition_afd.transitions_size; i++) {
+        puts(transition_afd.transitions->origin_id);
+        puts(transition_afd.transitions->symbols[0]);
+        puts(transition_afd.transitions->destiny_id);
+        printf("------------------------\n");
+        if (i != transition_afd.transitions_size-1)
+            transition_afd.transitions = transition_afd.transitions->next;
+    
+    }
 }
 
 struct afd_struct construct (char *input_file, char *output_file) {
