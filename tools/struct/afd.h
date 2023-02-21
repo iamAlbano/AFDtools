@@ -26,5 +26,8 @@ typedef struct afd_struct {
 } afd_struct;
 
 struct afd_struct construct (char *input_file, char *output_file) ;
+state *createState(state *next_state, char *identifier, int is_start, int is_final);
+void setStates(afd_struct *afd, char states[][50], int stts_size, char i_state[50], char f_states[][50], int f_states_size);
+
 
 #endif

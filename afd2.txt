@@ -11,5 +11,6 @@ neutro 1 neutro
 impar 0 teste
 impar 1 par
 par
-1
+2
 par
+impars
