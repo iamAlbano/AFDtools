@@ -1,6 +1,6 @@
 3
 par
-impars
+impar
 a
 2
 0
