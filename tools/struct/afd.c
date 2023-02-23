@@ -67,9 +67,22 @@ void setTransitions (afd_struct *afd, char transitions[][50], int transitions_si
     char symbol[50];
     char destiny[50];
 
-    afd->transitions = malloc(sizeof(int *) * afd->states_size);
-    afd->transitions_size = 0;
+    /* Iniciando transições com matriz vazia*/
 
+    afd->transitions_size = 0;
+    afd->transitions = malloc(sizeof(int*) * afd->states_size);
+
+    for (int i = 0; i < transitions_size; i++) {
+        afd->transitions[i] = malloc(sizeof(int));
+        for (int j = 0; j < afd->alphabet_size; j++) {
+            afd->transitions[i][j] = NULL;
+        }
+    }
+
+    /* 
+        Definindo matriz de transições com o indice da origem, símbolo 
+        e o resultado como indice do destino 
+    */
     for (int i = 0; i < transitions_size; i++) {
         
         sscanf(transitions[i], "%s %s %s", origin, symbol, destiny);
@@ -83,6 +96,7 @@ void setTransitions (afd_struct *afd, char transitions[][50], int transitions_si
             afd->transitions_size++;
         }
     }
+    
 }
 
 void setAlphabet (afd_struct *afd, char alphabet[], int alphabet_size) {
@@ -119,14 +133,8 @@ void printAFD (afd_struct afd) {
     printf("Transições: \n");
 
     for (int i = 0; i < state_aux.states_size; i++) {
-        for(int j = 0; j < state_aux.alphabet_size; j++) {
-            printf("%d + %d = %d\n", i, j, state_aux.transitions[i][j]);
-            if(state_aux.transitions[i][j] != NULL)
-                printf("%s - %s -> %s", 
-                state_aux.states[i].identifier, 
-                state_aux.alphabet[j].identifier, 
-                state_aux.states[state_aux.transitions[i][j]].identifier
-            );
+        for (int j = 0; j < state_aux.alphabet_size; j++) {
+            printf("%d - %d = %d\n", i, j, state_aux.transitions[i][j]);
         }
     }
 
