@@ -11,8 +11,12 @@ view.o: tools/view/view.h
 clean:
 	rm -rf *.o tools/*/*.o afdtool
 
+getGraph:
+	dot -Tpdf afd.dot > afd.pdf
+
 run:
 	make clean
 	make
 	clear
 	./afdtool --dot ./txt/afd.txt --output afd.dot
+	make getGraph

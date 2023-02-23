@@ -75,7 +75,7 @@ void setTransitions (afd_struct *afd, char transitions[][50], int transitions_si
     for (int i = 0; i < transitions_size; i++) {
         afd->transitions[i] = malloc(sizeof(int));
         for (int j = 0; j < afd->alphabet_size; j++) {
-            afd->transitions[i][j] = NULL;
+            afd->transitions[i][j] = -1;
         }
     }
 
@@ -144,6 +144,11 @@ struct afd_struct construct (char *input_file, char *output_file) {
 
     FILE *afd_file = fopen(input_file, "r");
 
+    if (afd_file == NULL) {
+        printf("Erro ao abrir arquivo");
+        exit(-1);
+    }
+
     /* linhas do arquivo */
     char file_line[50];
 
@@ -211,11 +216,12 @@ struct afd_struct construct (char *input_file, char *output_file) {
     struct afd_struct afd;
 
     setStates(&afd, states_arr, states_size, initial_state, final_states_arr, final_states_size);
+
     setAlphabet(&afd, symbols_arr, symbols_size); 
 
     setTransitions(&afd, transitions_arr, transitions_size);
 
-    printAFD(afd);   
+    /* printAFD(afd);    */
 
     /* fclose(afd_file); */
 
