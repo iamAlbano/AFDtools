@@ -12,8 +12,7 @@ struct symbol *createSymbol (char *identifier, int index) {
 
     return new_symbol;
 }
-struct state *createState(char *identifier, int is_start, int is_final, int index)
-{
+struct state *createState(char *identifier, int is_start, int is_final, int index) {
     state *new_state = (state *)malloc(sizeof(state));
 
     strcpy(new_state->identifier, identifier);
@@ -33,9 +32,11 @@ void setStates(afd_struct *afd, char states[][50], int stts_size, char i_state[5
         int is_start = strcmp(states[i], i_state) == 0 ? 1 : 0;
 
         int is_final = 0;
+        afd->final_states_size = 0;
         for (int j = 0; j < f_states_size; j++) {
             if (strcmp(states[i], f_states[j]) == 0) {
                 is_final = 1;
+                afd->final_states_size++;
                 break;
             }
         }
@@ -134,13 +135,62 @@ void printAFD (afd_struct afd) {
 
     for (int i = 0; i < state_aux.states_size; i++) {
         for (int j = 0; j < state_aux.alphabet_size; j++) {
-            printf("%d - %d = %d\n", i, j, state_aux.transitions[i][j]);
+            printf("%d - %d = %s\n", i, j, 
+            state_aux.states[state_aux.transitions[i][j]].identifier
+            );
         }
     }
 
 }
 
-struct afd_struct construct (char *input_file, char *output_file) {
+void createTxtFile (afd_struct afd, char *output_file) {
+    FILE *afd_file = fopen(output_file, "w");
+
+    if (afd_file == NULL) {
+        printf("Erro ao abrir arquivo");
+        exit(-1);
+    }
+
+    fprintf(afd_file, "%d\n", afd.states_size);
+
+    for (int i = 0; i < afd.states_size; i++) {
+        fprintf(afd_file, "%s\n", afd.states[i].identifier);
+    }
+
+    fprintf(afd_file, "%d\n", afd.alphabet_size);
+
+    for (int i = 0; i < afd.alphabet_size; i++) {
+        fprintf(afd_file, "%c\n", afd.alphabet[i].identifier);
+    }
+
+    fprintf(afd_file, "%d\n", afd.transitions_size);
+
+    for (int i = 0; i < afd.states_size; i++) {
+        for (int j = 0; j < afd.alphabet_size; j++) {
+            fprintf(afd_file, "%s %c %s\n", afd.states[i].identifier, afd.alphabet[j].identifier, afd.states[afd.transitions[i][j]].identifier);
+        }
+    }
+
+    for (int i = 0; i < afd.states_size; i++) {
+        if (afd.states[i].is_start == 1) {
+            fprintf(afd_file, "%s\n", afd.states[i].identifier);
+            break;
+        }
+    }
+
+    if (afd.final_states_size > 0) {
+        fprintf(afd_file, "%d\n", afd.final_states_size);
+
+    }
+        for (int i = 0; i < afd.states_size; i++) {
+            if (afd.states[i].is_final == 1) {
+                fprintf(afd_file, "%s\n", afd.states[i].identifier);
+            }
+        }
+    
+} 
+
+struct afd_struct construct (char *input_file) {
 
     FILE *afd_file = fopen(input_file, "r");
 
@@ -221,7 +271,7 @@ struct afd_struct construct (char *input_file, char *output_file) {
 
     setTransitions(&afd, transitions_arr, transitions_size);
 
-    /* printAFD(afd);    */
+    /* printAFD(afd);    */ 
 
     /* fclose(afd_file); */
 

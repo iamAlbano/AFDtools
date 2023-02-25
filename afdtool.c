@@ -4,6 +4,7 @@
 #include <locale.h>
 
 #include "tools/view/view.h"
+#include "tools/complement/complement.h"
 
 int validateParameters (int num_params) {
     if (num_params == 1 ) {
@@ -12,7 +13,7 @@ int validateParameters (int num_params) {
     }
 }
 
-char* handleView (int argc, char *argv[]) {
+char* handleStartFunction (int argc, char *argv[]) {
 
     if ( argc != 5) {
         printf("Número de parâmetros inválido.\n");
@@ -23,7 +24,10 @@ char* handleView (int argc, char *argv[]) {
 
     strcpy(output, argv[4]);
     
-    view(argv[2], output);
+    if (!strcmp(argv[1],"--dot"))
+        view(argv[2], output);
+    else if (!strcmp(argv[1],"--complemento"))
+        exportComplement(argv[2], output);
 }
 
 int main(int argc, char *argv[]){
@@ -32,8 +36,8 @@ int main(int argc, char *argv[]){
 
     validateParameters(argc);
 
-    if (!strcmp(argv[1],"--dot"))
-        handleView(argc, argv);
+    if (!strcmp(argv[1],"--dot") || !strcmp(argv[1],"--complemento"))
+        handleStartFunction(argc, argv);
 
     else
         printf("Funcionalidade não implementada.\n");
