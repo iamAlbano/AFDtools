@@ -53,6 +53,8 @@ symbol[1] = {
 transicao[estado_indice][simbolo_indice]
 transicao[0][0] = 1 <-- retorna o indice do estado que é resultado da transicao */
 
-struct afd_struct construct (char *input_file) ;
+struct afd_struct construct (char *input_file);
+int getStartStateIndex (afd_struct afd);
+int getSymbolIndex (afd_struct afd, char symbol);
 
 #endif

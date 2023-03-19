@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include "afd.h"
 
-struct symbol *createSymbol (char *identifier, int index) {
+struct symbol *createSymbol (char identifier, int index) {
     symbol *new_symbol = (symbol *)malloc(sizeof(symbol));
 
     new_symbol->identifier = identifier;
@@ -51,6 +51,15 @@ int geStateIndex (afd_struct afd, char *identifier) {
     for (int i = 0; i < afd.states_size; i++) {
         if (strcmp(afd.states[i].identifier, identifier) == 0)
             return i;
+    }
+    return -1;
+}
+
+int getStartStateIndex (afd_struct afd) {
+    for (int i = 0; i < afd.states_size; i++) {
+        if (afd.states[i].is_start == 1) {
+            return i;
+        }
     }
     return -1;
 }
@@ -277,6 +286,7 @@ struct afd_struct construct (char *input_file) {
 
     return afd; 
 }
+
 
 
 
