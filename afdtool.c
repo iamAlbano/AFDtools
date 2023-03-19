@@ -26,10 +26,12 @@ char* handleStartFunction (int argc, char *argv[]) {
 
     strcpy(output, argv[4]);
     
-    if (!strcmp(argv[1],"--dot"))
-        view(argv[2], output);
-    else if (!strcmp(argv[1],"--complemento"))
+    if (!strcmp(argv[1],"--dot")) 
+        view(argv[2], output); 
+    
+    else if (!strcmp(argv[1],"--complemento")) 
         exportComplement(argv[2], output);
+    
 }
 
 /* Função para iniciar a execução do programa com dois parâmetros de afd de entrada */
@@ -43,11 +45,7 @@ char* handleStartFunction2 (int argc, char *argv[]) {
     char* output = malloc(sizeof(char) * strlen(argv[5]) + 1); 
     strcpy(output, argv[5]); 
     
-    if (!strcmp(argv[1],"--uniao")) 
-        exportUnion(argv[2], argv[3], output);
-    else if (!strcmp(argv[1],"--intersecao"))
-        exportUnion(argv[2], argv[3], output);
-    else if (!strcmp(argv[1],"--reconhecer"))
+    if (!strcmp(argv[1],"--reconhecer")) 
         recognize(argv[2], argv[3], output);
 }
 
@@ -60,7 +58,7 @@ int main(int argc, char *argv[]){
     if (!strcmp(argv[1],"--dot") || !strcmp(argv[1],"--complemento"))
         handleStartFunction(argc, argv);
 
-    if (!strcmp(argv[1],"--uniao") || !strcmp(argv[1],"--intersecao") || !strcmp(argv[1],"--reconhecer") )
+    else if (!strcmp(argv[1],"--reconhecer"))
         handleStartFunction2(argc, argv);
 
     else
