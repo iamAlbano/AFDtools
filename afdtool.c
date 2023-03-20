@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
+#include <time.h> 
 
 #include "tools/view/view.h"
 #include "tools/complement/complement.h"
-#include "tools/union/union.h"
 #include "tools/recognize/recognize.h"
 
 int validateParameters (int num_params) {
@@ -25,10 +25,11 @@ char* handleStartFunction (int argc, char *argv[]) {
     char* output = malloc(sizeof(char) * strlen(argv[4]) + 1); 
 
     strcpy(output, argv[4]);
+    double total = 0.0;
     
-    if (!strcmp(argv[1],"--dot")) 
+    if (!strcmp(argv[1],"--dot"))
         view(argv[2], output); 
-    
+
     else if (!strcmp(argv[1],"--complemento")) 
         exportComplement(argv[2], output);
     

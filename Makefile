@@ -33,10 +33,6 @@ view:
 complement:
 	./afdtool --complemento ./txt/afd.txt --output complemento.txt
 
-# Executar o programa com a funcionalidade de união de dois AFDs
-union:
-	./afdtool --uniao ./txt/afd3.txt ./txt/afd4.txt --output afd.dot
-
 recognize:
 	./afdtool --reconhecer ./txt/afd.txt ./txt/palavras.txt --output saida.txt
 

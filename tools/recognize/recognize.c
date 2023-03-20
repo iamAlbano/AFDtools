@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "recognize.h"
 #include "../struct/afd.h"
@@ -21,10 +22,7 @@ int recognizeWord (struct afd_struct afd, char *word) {
         current_state_index = next_state_index;
     }
 
-    if (afd.states[current_state_index].is_final == 1)
-        return 1;
-    else
-        return 0;
+    return (afd.states[current_state_index].is_final);
 }
 
 void recognize (char *afd_file, char *words_file, char *output_file) {
