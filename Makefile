@@ -1,7 +1,7 @@
 
 # Comandos para compilar os arquivos
-all: tools/struct/afd.o tools/view/view.o tools/complement/complement.o tools/union/union.o tools/recognize/recognize.o afdtool.c
-	gcc tools/struct/afd.o tools/view/view.o tools/complement/complement.o tools/union/union.o tools/recognize/recognize.o afdtool.c -o afdtool
+all: tools/struct/afd.o tools/view/view.o tools/complement/complement.o tools/recognize/recognize.o afdtool.c
+	gcc tools/struct/afd.o tools/view/view.o tools/complement/complement.o tools/recognize/recognize.o afdtool.c -o afdtool
 
 construct.o: tools/struct/afd.h
 	gcc -c tools/struct/afd.c
